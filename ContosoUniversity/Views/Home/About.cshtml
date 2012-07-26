@@ -1,8 +1,24 @@
-﻿@{
-    ViewBag.Title = "About Us";
+﻿@model IEnumerable<ContosoUniversity.ViewModels.EnrollmentDateGroup>
+@*set the model that we want by using @model IEnumerable<"project name"."Folde name"."File Name">*@
+@{
+    ViewBag.Title = "Student Body Statistics";
 }
 
-<h2>About</h2>
-<p>
-     Put content here.
-</p>
+<h2>Student Body Statistics</h2>
+
+<table>
+    <tr>
+        <th>Enrollment Date</th>
+        <th>Students</th>
+    </tr>
+    
+    @foreach(var item in Model)
+    {
+        <tr>
+            <td>@string.Format("{0:d}", item.EnrollmentDate)</td>
+            @*item points to EnrollmentDate from EnrollmentDateGroup Class*@
+            <td>@item.StudentCount</td>
+        </tr>
+    }
+
+</table>

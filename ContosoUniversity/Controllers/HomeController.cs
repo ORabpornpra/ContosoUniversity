@@ -10,6 +10,7 @@ using ContosoUniversity.ViewModels;
 
 namespace ContosoUniversity.Controllers
 {
+
   public class HomeController : Controller
     {
       private  SchoolContext  db = new SchoolContext();// create the instantitate
@@ -23,6 +24,9 @@ namespace ContosoUniversity.Controllers
 
         public ActionResult About()
         {
+            //The LINQ statement groups the student entities by enrollment date, 
+            //calculates the number of entities in each group, and stores the results 
+            //in a collection of EnrollmentDateGroup view model objects.
             var data = from student in db.Students
                        group student by student.EnrollmentDate
                        into dateGroup
@@ -34,5 +38,12 @@ namespace ContosoUniversity.Controllers
 
             return View(data);
         }
+
+        protected override void Dispose(bool disposing)
+        {//to close the connection
+            db.Dispose();
+            base.Dispose(disposing);
+        }
     }
+
 }
