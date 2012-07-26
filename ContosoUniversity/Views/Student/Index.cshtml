@@ -1,0 +1,95 @@
+﻿@*@model IEnumerable<ContosoUniversity.Models.Student>*@
+@model PagedList.IPagedList<ContosoUniversity.Models.Student>
+
+@{
+    //ViewBag.Title = "Index";
+    ViewBag.Title = "Student";
+}
+
+<h2>Student</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@*adding the searching textbox*@
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search"/>
+    </p>
+}
+<table>
+    <tr>
+        <th></th>
+        <th>
+            @*LastName*@
+            @* @Html.ActionLink("Last Name", "Index", new { sortOrder=ViewBag.NameSortParm })*@
+            @Html.ActionLink("Last Name", "Index", new { sortOrder=ViewBag.NameSortParm, currentFilter=ViewBag.CurrentFilter })
+    
+        </th>
+        <th>
+            FirstMidName
+        </th>
+        <th>
+            @*EnrollmentDate*@
+            @*@Html.ActionLink("Enrollment Date", "Index", new { sortOrder=ViewBag.DateSortParm })*@
+            @Html.ActionLink("Enrollment Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+    
+        </th>
+        
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.StudentID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.StudentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.StudentID })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstMidName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </td>
+        
+        </tr>
+    }
+
+</table>
+
+<div>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount
+    @*if Model.PageCount < Model.PageNumber display 0, else display PageNumber*@
+    
+    @if(Model.HasPreviousPage)
+    {
+        @Html.ActionLink("<<", "Index", new { page = 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter })
+        @Html.Raw(" ");
+        @Html.ActionLink("< Prev", "Index", new {page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter=ViewBag.CurrentFilter})
+    }
+    else
+    {
+        @:<<
+        @Html.Raw(" ");
+        @:< Prev
+    }
+    @if(Model.HasNextPage)
+    {
+        @Html.ActionLink("Next >", "Index", new { page = Model.PageNumber + 1, sortOrder = ViewBag.CurrentSort, currentFilter=ViewBag.CurrentFilter})
+        @Html.Raw(" ");
+        @Html.ActionLink(">>", "Index", new {page = Model.PageCount, sortOrder = ViewBag.CurrentSort, currentFilter=ViewBag.CurrentFilter})
+    }
+    else
+    {
+        @:Next >
+        @Html.Raw(" ")
+        @:>>
+    }
+</div>

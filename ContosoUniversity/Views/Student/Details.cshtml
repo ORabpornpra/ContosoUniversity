@@ -1,0 +1,68 @@
+﻿@model ContosoUniversity.Models.Student
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Student</legend>
+
+    <div class="display-label">LastName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+
+    <div class="display-label">FirstMidName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstMidName)
+    </div>
+
+    <div class="display-label">EnrollmentDate</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EnrollmentDate)
+    </div>
+
+    @*display the Enrollment details*@
+    <div class="display-label"> 
+        <b>@Html.LabelFor(model => model.Enrollments)</b>
+    </div>
+    <div class="display-field">
+        <table>
+            <tr>
+                <th>Course Title</th>
+                <th>Grade</th>
+                @*oat added: add the Credit collum header*@
+                <th>Credit</th>
+                @*end oat added*@
+            </tr>
+            @*adding @ in front of the command in C# for HTML*@
+            @*This code loops through the entities in the Enrollments navigation property*@
+            @foreach(var item in Model.Enrollments)
+            {
+                <tr>
+                    <td>
+                        @*item is VAR type, so it will has a type base on the value that is assiged into it
+                        use LINQ to query the data
+                        Enrollments is an object of DbSet<Enrollment> in the SchoolContext class
+                        item goes to Class Course and grab value of from the Title property by useing get and set*@
+                        @Html.DisplayFor(modelItem => item.Course.Title)
+                    </td>
+                    <td>
+                        @*Grade is in the Enrollment Class, and item is point in the DbSet<Enrollment>, so
+                        item can grab the value of Grade property by using get and set directly*@
+                        @Html.DisplayFor(modelItem => item.Grade)
+                    </td>
+                    @*oat added: Display the credit in the Credit Collum*@
+                    <td>@Html.DisplayFor(modelItem => item.Course.Credits)</td>
+                    @*end oat added*@
+                </tr>
+            }
+        </table>
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.StudentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
