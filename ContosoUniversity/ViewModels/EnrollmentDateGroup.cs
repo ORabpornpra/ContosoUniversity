@@ -13,4 +13,5 @@ namespace ContosoUniversity.ViewModels
 
         public int StudentCount { get; set; }
     }
+
 }

@@ -11,9 +11,9 @@ using ContosoUniversity.ViewModels;
 namespace ContosoUniversity.Controllers
 {
 
-  public class HomeController : Controller
+    public class HomeController : Controller
     {
-      private  SchoolContext  db = new SchoolContext();// create the instantitate
+        private SchoolContext db = new SchoolContext();// create the instantitate
 
         public ActionResult Index()
         {
@@ -29,12 +29,12 @@ namespace ContosoUniversity.Controllers
             //in a collection of EnrollmentDateGroup view model objects.
             var data = from student in db.Students
                        group student by student.EnrollmentDate
-                       into dateGroup
-                       select new EnrollmentDateGroup()
-                                  {
-                                      EnrollmentDate = dateGroup.Key,
-                                      StudentCount = dateGroup.Count()
-                                  };
+                           into dateGroup
+                           select new EnrollmentDateGroup()
+                           {
+                               EnrollmentDate = dateGroup.Key,
+                               StudentCount = dateGroup.Count()
+                           };
 
             return View(data);
         }
