@@ -235,6 +235,11 @@ table th {
 
 /* MISC  
 ----------------------------------------------------------*/
+.selectedrow 
+{ 
+    background-color: #EEEEEE; 
+}
+
 .clear {
     clear: both;
 }
@@ -278,6 +283,8 @@ div#title {
     color: white;
     text-decoration: none;
 }
+
+
 
 /* Styles for validation helpers
 -----------------------------------------------------------*/
