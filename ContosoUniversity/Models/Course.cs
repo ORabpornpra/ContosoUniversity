@@ -21,7 +21,7 @@ namespace ContosoUniversity.Models
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Number of credits is required.")]
-        [MaxLength(50, ErrorMessage = "Number of credits must be between 0 and 5.")]
+        [Range(0, 5, ErrorMessage = "Number of credits must be between 0 and 5.")]
         public int Credits { get; set; }
 
         [Display(Name = "Department")]
