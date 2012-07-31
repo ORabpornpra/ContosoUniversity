@@ -29,7 +29,7 @@ namespace ContosoUniversity.Models
 
         // Start Navigation properties Section
 
-        //onr-to-one
+        //one-to-one
         public virtual Department Department { get; set; }
         //one-to-many
         public virtual ICollection<Enrollment> Enrollments { get; set; }//Enrollment is Navigation properties

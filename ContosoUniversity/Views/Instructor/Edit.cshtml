@@ -39,6 +39,39 @@
             @Html.EditorFor(model => model.HireDate)
             @Html.ValidationMessageFor(model => model.HireDate)
         </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OfficeAssignment.Location)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OfficeAssignment.Location)
+            @Html.ValidationMessageFor(model => model.OfficeAssignment.Location)
+        </div>
+        
+        @*for checkbox list*@
+        <div class="editor-field">
+            <table>
+                <tr>
+                    @{
+                        int cnt = 0;
+                        List<ContosoUniversity.ViewModels.AssignedCourseData> courses = ViewBag.Courses;
+                        
+                        foreach (var course in courses)
+                        {
+                            if (cnt++ % 3 == 0)
+                            {
+                                @: </tr> <tr>
+                            }
+                            @: <td>
+                                <input type="checkbox" name="selectedCourses" value="@course.CourseID"
+                                    @(Html.Raw(course.Assigned ? "checked=\" checked\"" : "")) />
+                                @course.CourseID @: @course.Title
+                            @:</td>
+                        }
+                    @: </tr>
+                    }
+                
+            </table>
+        </div>
 
         <p>
             <input type="submit" value="Save" />
