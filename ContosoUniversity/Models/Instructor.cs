@@ -43,7 +43,7 @@ namespace ContosoUniversity.Models
         //one-to-one
         public virtual OfficeAssignment OfficeAssignment { get; set; }
 
-        // End Navigation properties
+        
 
     }
 }
