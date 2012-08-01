@@ -8,11 +8,11 @@ namespace ContosoUniversity.Models
 {
     public class OfficeAssignment
     {
-        // InstructorID is used to be both Primary Key and Foreign  key for this class
+        // PersonID is used to be both Primary Key and Foreign  key for this class
         // in order to set it to be a Primary key, it has to add the [kry] attribute
         // othewise the primary key will be OfficeAssignmentID
         [Key]
-        public int InstructorID { get; set; }
+        public int PersonID { get; set; }
 
         [MaxLength(50)]
         [Display(Name = "Office Location")]

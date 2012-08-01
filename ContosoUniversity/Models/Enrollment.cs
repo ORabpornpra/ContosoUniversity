@@ -10,7 +10,7 @@ namespace ContosoUniversity.Models
     {
         public int EnrollmentID { set; get; } //EnrollmentID is the primarykey
         public int CourseID { get; set; }//CourseID  is a foreign key,
-        public int StudentID { get; set; }//StudentID is a foreign key
+        public int PersonID { get; set; }//PersonID is a foreign key
 
         [DisplayFormat(DataFormatString = "{0:#.#}", ApplyFormatInEditMode = true, NullDisplayText = "No grade")]
         public decimal? Grade { get; set; }// ? after decimal mean that Grade property is nullable

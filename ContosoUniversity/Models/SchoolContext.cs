@@ -16,6 +16,7 @@ namespace ContosoUniversity.Models
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+        public DbSet<Person> People { get; set; }
 
 
         //customize some of the mapping using fluent API calls.
@@ -30,9 +31,9 @@ namespace ContosoUniversity.Models
             //many-to-many relationship between the Instructor and Course
             modelBuilder.Entity<Course>()
                 .HasMany(c => c.Instructors).WithMany(i => i.Courses)
-                //set the collum name instead of InstructorInstructorID from auto gernerate to be InstructorID
+                //set the collum name instead of InstructorPersonID from auto gernerate to be PersonID 
                 .Map(t => t.MapLeftKey("CourseID")
-                    .MapRightKey("InstructorID")
+                    .MapRightKey("PersonID")
                     .ToTable("CourseInstructor"));
             modelBuilder.Entity<Department>()
                 .HasOptional(x => x.Administrator);

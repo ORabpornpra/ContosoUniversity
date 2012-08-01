@@ -28,14 +28,14 @@ namespace ContosoUniversity.Controllers
         {
             var viewModel = new InstructorIndexData();
             viewModel.Instructors = db.Instructors
-                .Include(i => i.OfficeAssignment)
+                //.Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses.Select(c => c.Department))
                 .OrderBy(i => i.LastName);
 
             if(id != null)
             {
-                ViewBag.InstructorID = id.Value;
-                viewModel.Courses = viewModel.Instructors.Where(i => i.InstructorID == id.Value).Single().Courses;
+                ViewBag.PersonID = id.Value;
+                viewModel.Courses = viewModel.Instructors.Where(i => i.PersonID == id.Value).Single().Courses;
             }
             //if (courseID != null)
             //{
@@ -75,7 +75,7 @@ namespace ContosoUniversity.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.InstructorID = new SelectList(db.OfficeAssignments, "InstructorID", "Location");
+            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID ", "Location");
             return View();
         } 
 
@@ -92,7 +92,7 @@ namespace ContosoUniversity.Controllers
                 return RedirectToAction("Index");  
             }
 
-            ViewBag.InstructorID = new SelectList(db.OfficeAssignments, "InstructorID", "Location", instructor.InstructorID);
+            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID ", "Location", instructor.PersonID );
             return View(instructor);
         }
         
@@ -102,13 +102,13 @@ namespace ContosoUniversity.Controllers
         public ActionResult Edit(int id)
         {
             //Instructor instructor = db.Instructors.Find(id);
-            //ViewBag.InstructorID = new SelectList(db.OfficeAssignments, "InstructorID", "Location", instructor.InstructorID);
+            //ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID ", "Location", instructor.PersonID );
             // .find doesn't allow in the Eager Load method, and so it need to use .Where and . Single()
 
             Instructor instructor = db.Instructors
-                .Include(i => i.OfficeAssignment)
+                //.Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
-                .Where(i => i.InstructorID == id)
+                .Where(i => i.PersonID == id)
                 .Single();
 
             PopulateAssignedCourseData(instructor);// pass the instructorToUpdate for the function PopulateAssignedCourseData in order to
@@ -121,7 +121,7 @@ namespace ContosoUniversity.Controllers
             var allCourses = db.Courses; // db is an iobject that is pointing to SchoolContext Class, and then use db.Courses to access to the 
             // fuction Courses in the SchoolContext Class which mean to access to the Course table in the data base
             var instructorCourses = new HashSet<int>(instructor.Courses.Select(c => c.CourseID));//create the mark in the checkbox for the classes 
-            //base on the InstructorID
+            //base on the PersonID 
             var viewModel = new List<AssignedCourseData>();// object viewModel is pointing to AssignedCourseData class, and viewModel is going to 
             //use for adding data to the CourseID, Title, and Assigned in the AssignedCourseData class
             foreach (var course in allCourses)// loop through all the classes in the Course table
@@ -145,9 +145,9 @@ namespace ContosoUniversity.Controllers
         public ActionResult Edit(int id, FormCollection formCollection, string[] selectedCourses)
         {
             var instructorToUpdate = db.Instructors
-                .Include(i => i.OfficeAssignment)
+                //.Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
-                .Where(i => i.InstructorID == id)
+                .Where(i => i.PersonID == id)
                 .Single();
             if (TryUpdateModel(instructorToUpdate, "", null, new string[] { "Courses" }))
                 //Updates the retrieved Instructor entity with values 

@@ -190,7 +190,7 @@ namespace ContosoUniversity.Controllers
                 //db.Students.Remove(student);
 
                 //avoid an unnecessary SQL query to retrieve the row
-                Student studentToDelete  = new Student(){StudentID = id};
+                Student studentToDelete  = new Student(){PersonID = id};
                 //studentToDelete point to the student in the Student Class base on the StudentID
                 db.Entry(studentToDelete).State = EntityState.Deleted;
                 db.SaveChanges();

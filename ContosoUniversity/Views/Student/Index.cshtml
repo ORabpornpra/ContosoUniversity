@@ -44,9 +44,9 @@
     @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.StudentID }) |
-                @Html.ActionLink("Details", "Details", new { id=item.StudentID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.StudentID })
+                @Html.ActionLink("Edit", "Edit", new { id=item.PersonID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.PersonID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.PersonID })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LastName)

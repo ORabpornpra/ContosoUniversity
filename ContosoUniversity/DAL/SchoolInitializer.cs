@@ -40,10 +40,10 @@ namespace ContosoUniversity.DAL
 
             var departments = new List<Department>
             {
-                new Department { Name = "English",     Budget = 350000, StartDate = DateTime.Parse("2007-09-01"), InstructorID = 1 },
-                new Department { Name = "Mathematics", Budget = 100000, StartDate = DateTime.Parse("2007-09-01"), InstructorID = 2 },
-                new Department { Name = "Engineering", Budget = 350000, StartDate = DateTime.Parse("2007-09-01"), InstructorID = 3 },
-                new Department { Name = "Economics",   Budget = 100000, StartDate = DateTime.Parse("2007-09-01"), InstructorID = 4 }
+                new Department { Name = "English",     Budget = 350000, StartDate = DateTime.Parse("2007-09-01"), PersonID = 9 },
+                new Department { Name = "Mathematics", Budget = 100000, StartDate = DateTime.Parse("2007-09-01"), PersonID = 10 },
+                new Department { Name = "Engineering", Budget = 350000, StartDate = DateTime.Parse("2007-09-01"), PersonID = 11 },
+                new Department { Name = "Economics",   Budget = 100000, StartDate = DateTime.Parse("2007-09-01"), PersonID = 12 }
             };
             departments.ForEach(s => context.Departments.Add(s));
             context.SaveChanges();
@@ -73,27 +73,27 @@ namespace ContosoUniversity.DAL
 
             var enrollments = new List<Enrollment>
             {
-                new Enrollment { StudentID = 1, CourseID = 1050, Grade = 1 },
-                new Enrollment { StudentID = 1, CourseID = 4022, Grade = 3 },
-                new Enrollment { StudentID = 1, CourseID = 4041, Grade = 1 },
-                new Enrollment { StudentID = 2, CourseID = 1045, Grade = 2 },
-                new Enrollment { StudentID = 2, CourseID = 3141, Grade = 4 },
-                new Enrollment { StudentID = 2, CourseID = 2021, Grade = 4 },
-                new Enrollment { StudentID = 3, CourseID = 1050            },
-                new Enrollment { StudentID = 4, CourseID = 1050,           },
-                new Enrollment { StudentID = 4, CourseID = 4022, Grade = 4 },
-                new Enrollment { StudentID = 5, CourseID = 4041, Grade = 3 },
-                new Enrollment { StudentID = 6, CourseID = 1045            },
-                new Enrollment { StudentID = 7, CourseID = 3141, Grade = 2 },
+                new Enrollment { PersonID = 1, CourseID = 1050, Grade = 1 },
+                new Enrollment { PersonID = 1, CourseID = 4022, Grade = 3 },
+                new Enrollment { PersonID = 1, CourseID = 4041, Grade = 1 },
+                new Enrollment { PersonID = 2, CourseID = 1045, Grade = 2 },
+                new Enrollment { PersonID = 2, CourseID = 3141, Grade = 4 },
+                new Enrollment { PersonID = 2, CourseID = 2021, Grade = 4 },
+                new Enrollment { PersonID = 3, CourseID = 1050            },
+                new Enrollment { PersonID = 4, CourseID = 1050,           },
+                new Enrollment { PersonID = 4, CourseID = 4022, Grade = 4 },
+                new Enrollment { PersonID = 5, CourseID = 4041, Grade = 3 },
+                new Enrollment { PersonID = 6, CourseID = 1045            },
+                new Enrollment { PersonID = 7, CourseID = 3141, Grade = 2 },
             };
             enrollments.ForEach(s => context.Enrollments.Add(s));
             context.SaveChanges();
 
             var officeAssignments = new List<OfficeAssignment>
             {
-                new OfficeAssignment { InstructorID = 1, Location = "Smith 17" },
-                new OfficeAssignment { InstructorID = 2, Location = "Gowan 27" },
-                new OfficeAssignment { InstructorID = 3, Location = "Thompson 304" },
+                new OfficeAssignment { PersonID = 9, Location = "Smith 17" },
+                new OfficeAssignment { PersonID = 10, Location = "Gowan 27" },
+                new OfficeAssignment { PersonID = 11, Location = "Thompson 304" },
             };
             officeAssignments.ForEach(s => context.OfficeAssignments.Add(s));
             context.SaveChanges();
