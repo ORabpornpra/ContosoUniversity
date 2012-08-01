@@ -28,6 +28,10 @@ namespace ContosoUniversity.Models
         //Foreign Key
         public int? InstructorID { get; set; }// ? mean InstructorID can be null or nullable
 
+        [Timestamp]//The Timestamp attribute specifies that this column will be included in the Where clause of Update and Delete commands sent to the database.
+        public Byte[] Timestamp { get; set; }//to keep track the change
+        
+
 
         // Start Navigation properties Section
 
