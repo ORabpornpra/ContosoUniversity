@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using ContosoUniversity.Models;
 using System.Data.Entity.Infrastructure; //for using DbUpdateConcurrencyException 
 
@@ -127,8 +128,18 @@ namespace ContosoUniversity.Controllers
         //
         // GET: /Department/Delete/5
 
-        public ActionResult Delete(int id)
-        {
+        public ActionResult Delete(int id, bool? concurrencyError)//bool? is used to check that the page is redisplay after the concerency error occur or not
+        { //concurrencyError value sed within the URL
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ViewBag.ConcurrencyErrorMessage = "The record you attempted to delete "
+            + "was modified by another user after you got the original values. "
+            + "The delete operation was canceled and the current values in the "
+            + "database have been displayed. If you still want to delete this "
+            + "record, click the Delete button again. Otherwise "
+            + "click the Back to List hyperlink.";
+            }
+
             Department department = db.Departments.Find(id);
             return View(department);
         }
@@ -137,12 +148,27 @@ namespace ContosoUniversity.Controllers
         // POST: /Department/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Department department)//Department parameter type is used in order to acess to the TimeStamp
         {
-            Department department = db.Departments.Find(id);
-            db.Departments.Remove(department);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Entry(department).State = EntityState.Deleted;//delete the department 
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                //if the concerrency occure, sent the value concurrencyError= true when the page is direct
+                return RedirectToAction("Delete",
+                       new System.Web.Routing.RouteValueDictionary {{"concurrencyError", true}});
+            }
+            catch(DataException)
+            {
+                ModelState.AddModelError(string.Empty,
+                                         "Unable to save changes. Try again, and if the problem persists contact your system administrator.");
+                return View(department);
+            }
+            
         }
 
         protected override void Dispose(bool disposing)
