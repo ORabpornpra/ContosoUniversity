@@ -12,19 +12,10 @@
 <table>
     <tr>
         <th></th>
-        <th>
-            Name
-        </th>
-        <th>
-            Budget
-        </th>
-        <th>
-            StartDate
-        </th>
-        <th>
-            Administrator
-        </th>
-        
+        <th> Name </th>
+        <th> Budget </th>
+        <th> StartDate</th>
+        <th>Administrator</th>        
     </tr>
 
 @foreach (var item in Model) {
@@ -44,7 +35,7 @@
             @Html.DisplayFor(modelItem => item.StartDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Administrator.)
+            @Html.DisplayFor(modelItem => item.Administrator.FullName)
         </td>
         
     </tr>
