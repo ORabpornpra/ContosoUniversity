@@ -18,22 +18,45 @@ namespace ContosoUniversity.Controllers
         //
         // GET: /Course/
 
+        /*
         public ViewResult Index()
         {
             //see the .Include key word that mean it's using Eager Loading
             //var courses = db.Courses.Include(c => c.Department);
-            var courses = unitOfWork.CourseRepository.Get(includeProperties: "Department");
+            //var courses = unitOfWork.CourseRepository.Get(includeProperties: "Department");
+            var courses = unitOfWork.CourseRepository.Get();
             return View(courses.ToList());// create the query
+        }
+         */
+
+        public ActionResult Index(int? SelectedDepartment)
+        {
+            var departments = unitOfWork.DepartmentRepository.Get(
+                orderBy: q => q.OrderBy(d => d.Name));
+            ViewBag.SelectedDepartment = new SelectList(departments, "DepartmentID", "Name", SelectedDepartment);
+
+            int departmentID = SelectedDepartment.GetValueOrDefault();
+            return View(unitOfWork.CourseRepository.Get(
+                filter: d => !SelectedDepartment.HasValue || d.DepartmentID == departmentID,
+                orderBy: q => q.OrderBy(d => d.CourseID),
+                includeProperties: "Department"));
         }
 
         //
         // GET: /Course/Details/5
 
-        public ViewResult Details(int id)
+        //public ViewResult Details(int id)
+        //{
+        //    //Course course = db.Courses.Find(id);
+        //    Course course = unitOfWork.CourseRepository.GetByID(id);
+        //    return View(course);
+        //}
+
+        public ActionResult Details(int id)
         {
-            //Course course = db.Courses.Find(id);
-            Course course = unitOfWork.CourseRepository.GetByID(id);
-            return View(course);
+            var query = "SELECT * FROM Course WHERE CourseID = @p0";//check this website for @p0
+            //this webhttp://visualstudiomagazine.com/articles/2010/06/24/five-tips-linq-to-sql.aspx
+            return View(unitOfWork.CourseRepository.GetWithRawSql(query, id).Single());
         }
 
         //
@@ -158,6 +181,15 @@ namespace ContosoUniversity.Controllers
             //db.Dispose();
             unitOfWork.Dispose();
             base.Dispose(disposing);
+        }
+
+        public ActionResult UpdateCourseCredits(int? multiplier)
+        {
+            if (multiplier != null)
+            {
+                ViewBag.RowsAffected = unitOfWork.CourseRepository.UpdateCourseCredits(multiplier.Value);
+            }
+            return View();
         }
     }
 }

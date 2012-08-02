@@ -79,6 +79,10 @@ namespace ContosoUniversity.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    ValidateOneAdministratorAssignmentPerInstructor(department);
+                }
+                if (ModelState.IsValid)
+                {
                     db.Entry(department).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -175,6 +179,27 @@ namespace ContosoUniversity.Controllers
         {
             db.Dispose();
             base.Dispose(disposing);
+        }
+
+        private void ValidateOneAdministratorAssignmentPerInstructor(Department department)
+        {
+            if (department.PersonID != null)
+            {
+                var duplicateDepartment = db.Departments
+                    .Include("Administrator")
+                    .Where(d => d.PersonID == department.PersonID)
+                    .AsNoTracking()//specify no tracking
+                    .FirstOrDefault();
+                if (duplicateDepartment != null && duplicateDepartment.DepartmentID != department.DepartmentID)
+                {
+                    var errorMessage = String.Format(
+                        "Instructor {0} {1} is already administrator of the {2} department.",
+                        duplicateDepartment.Administrator.FirstMidName,
+                        duplicateDepartment.Administrator.LastName,
+                        duplicateDepartment.Name);
+                    ModelState.AddModelError(string.Empty, errorMessage);
+                }
+            }
         }
     }
 }

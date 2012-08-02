@@ -27,14 +27,24 @@ namespace ContosoUniversity.Controllers
             //The LINQ statement groups the student entities by enrollment date, 
             //calculates the number of entities in each group, and stores the results 
             //in a collection of EnrollmentDateGroup view model objects.
-            var data = from student in db.Students
-                       group student by student.EnrollmentDate
-                           into dateGroup
-                           select new EnrollmentDateGroup()
-                           {
-                               EnrollmentDate = dateGroup.Key,
-                               StudentCount = dateGroup.Count()
-                           };
+
+            // LINQ to SQL
+            //var data = from student in db.Students
+            //           group student by student.EnrollmentDate
+            //               into dateGroup
+            //               select new EnrollmentDateGroup()
+            //               {
+            //                   EnrollmentDate = dateGroup.Key,
+            //                   StudentCount = dateGroup.Count()
+            //               };
+
+            var query = "SELECT EnrollmentDate, COUNT(*) AS StudentCount "
+                        + "FROM Person "
+                        + "WHERE EnrollmentDate IS NOT NULL "
+                        + "GROUP BY EnrollmentDate";
+            var data = db.Database.SqlQuery<EnrollmentDateGroup>(query);//Use the DbDatabase.SqlQuery method 
+            //for queries that return types that aren't entities. The returned data isn't tracked by the database context, 
+            //even if you use this method to retrieve entity types
 
             return View(data);
         }

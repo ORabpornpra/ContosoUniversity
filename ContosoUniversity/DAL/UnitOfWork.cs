@@ -13,7 +13,8 @@ namespace ContosoUniversity.DAL
 
         // the reason to create the GenericRepository Class is to get rid of redundant code by using it for both Department and Course Class 
         private GenericRepository<Department> departmentRepository;
-        private GenericRepository<Course> courseRepository;
+        //private GenericRepository<Course> courseRepository;
+        private CourseRepository courseRepository;
 
 
         //Department contex
@@ -30,7 +31,8 @@ namespace ContosoUniversity.DAL
         }
 
         //Course contex
-        public GenericRepository<Course> CourseRepository
+        //public GenericRepository<Course> CourseRepository
+        public CourseRepository CourseRepository
         {
             get
             {//Each repository property checks whether the repository already exists. 
@@ -38,7 +40,8 @@ namespace ContosoUniversity.DAL
                 //As a result, all repositories share the same context instance
                 if (this.courseRepository == null)
                 {
-                    this.courseRepository = new GenericRepository<Course>(context);
+                    //this.courseRepository = new GenericRepository<Course>(context);
+                    this.courseRepository = new CourseRepository(context);
                 }
                 return courseRepository;
             }

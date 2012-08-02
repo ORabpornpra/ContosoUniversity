@@ -11,13 +11,13 @@ namespace ContosoUniversity.DAL
 {
     public class GenericRepository<TEntity> where TEntity : class
     {
-        internal SchoolContext contex; //object for database contex
+        internal SchoolContext context; //object for database contex
         internal DbSet<TEntity> dbSet; //object for entity set
 
-        public GenericRepository(SchoolContext contex)
+        public GenericRepository(SchoolContext context)
         {
-            this.contex = contex;
-            this.dbSet = contex.Set<TEntity>();
+            this.context = context;
+            this.dbSet = context.Set<TEntity>();
         }
 
         // Func is use for the lambda Expression
@@ -80,7 +80,7 @@ namespace ContosoUniversity.DAL
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (contex.Entry(entityToDelete).State == EntityState.Detached)
+            if (context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
             }
@@ -91,7 +91,13 @@ namespace ContosoUniversity.DAL
             //an entity instance that includes the original value of a tracking property.
         {
             dbSet.Attach(entityToUpdate);
-            contex.Entry(entityToUpdate).State = EntityState.Modified;
+            context.Entry(entityToUpdate).State = EntityState.Modified;
         }
+
+        public virtual IEnumerable<TEntity> GetWithRawSql(string query, params object[] parameters)//return entity types
+        {
+            return dbSet.SqlQuery(query, parameters).ToList();//dbSet.SqlQuery to connect directly to the database
+        }
+
     }
 }
