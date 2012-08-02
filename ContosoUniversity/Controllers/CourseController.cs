@@ -6,12 +6,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ContosoUniversity.Models;
+using ContosoUniversity.DAL;
 
 namespace ContosoUniversity.Controllers
 { 
     public class CourseController : Controller
     {
-        private SchoolContext db = new SchoolContext();
+        //private SchoolContext db = new SchoolContext();
+        private UnitOfWork unitOfWork = new UnitOfWork();//create UnitOfWork object
 
         //
         // GET: /Course/
@@ -19,8 +21,9 @@ namespace ContosoUniversity.Controllers
         public ViewResult Index()
         {
             //see the .Include key word that mean it's using Eager Loading
-            var courses = db.Courses.Include(c => c.Department);
-            return View(courses.ToList());
+            //var courses = db.Courses.Include(c => c.Department);
+            var courses = unitOfWork.CourseRepository.Get(includeProperties: "Department");
+            return View(courses.ToList());// create the query
         }
 
         //
@@ -28,7 +31,8 @@ namespace ContosoUniversity.Controllers
 
         public ViewResult Details(int id)
         {
-            Course course = db.Courses.Find(id);
+            //Course course = db.Courses.Find(id);
+            Course course = unitOfWork.CourseRepository.GetByID(id);
             return View(course);
         }
 
@@ -54,8 +58,10 @@ namespace ContosoUniversity.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Courses.Add(course);
-                    db.SaveChanges();
+                    //db.Courses.Add(course);
+                    //db.SaveChanges();
+                    unitOfWork.CourseRepository.Insert(course);
+                    unitOfWork.Save();
                     return RedirectToAction("Index");
                 }
             }
@@ -75,7 +81,9 @@ namespace ContosoUniversity.Controllers
  
         public ActionResult Edit(int id)
         {
-            Course course = db.Courses.Find(id);
+            //Course course = db.Courses.Find(id);
+            Course course = unitOfWork.CourseRepository.GetByID(id);
+
             //ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", course.DepartmentID);
             PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
@@ -91,8 +99,10 @@ namespace ContosoUniversity.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(course).State = EntityState.Modified;
-                    db.SaveChanges();
+                    //db.Entry(course).State = EntityState.Modified;
+                    //db.SaveChanges();
+                    unitOfWork.CourseRepository.Update(course);
+                    unitOfWork.Save();
                     return RedirectToAction("Index");
                 }
             }
@@ -110,9 +120,11 @@ namespace ContosoUniversity.Controllers
         //Fuction for dropdown list
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
         {
-            var departmentsQuery = from d in db.Departments
-                                   orderby d.Name
-                                   select d;
+            //var departmentsQuery = from d in db.Departments
+            //                       orderby d.Name
+            //                       select d;
+            var departmentsQuery = unitOfWork.DepartmentRepository.Get(
+                orderBy: q => q.OrderBy(d => d.Name));
             ViewBag.DepartmentID = new SelectList(departmentsQuery, "DepartmentID", "Name", selectedDepartment);
         }
 
@@ -121,7 +133,8 @@ namespace ContosoUniversity.Controllers
  
         public ActionResult Delete(int id)
         {
-            Course course = db.Courses.Find(id);
+            //Course course = db.Courses.Find(id);
+            Course course = unitOfWork.CourseRepository.GetByID(id);
             return View(course);
         }
 
@@ -131,15 +144,19 @@ namespace ContosoUniversity.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {            
-            Course course = db.Courses.Find(id);
-            db.Courses.Remove(course);
-            db.SaveChanges();
+            //Course course = db.Courses.Find(id);
+            //db.Courses.Remove(course);
+            //db.SaveChanges();
+            Course course = unitOfWork.CourseRepository.GetByID(id);
+            unitOfWork.CourseRepository.Delete(id);
+            unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            //db.Dispose();
+            unitOfWork.Dispose();
             base.Dispose(disposing);
         }
     }
