@@ -6,13 +6,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ContosoUniversity.Models;
+using ContosoUniversity.DAL;
 using PagedList;
 
 namespace ContosoUniversity.Controllers
 { 
     public class StudentController : Controller
     {
-        private SchoolContext db = new SchoolContext();//instanitate the SchoolContext class
+       
+        
+        //private SchoolContext db = new SchoolContext();//instanitate the SchoolContext class
 
         //
         // GET: /Student/
@@ -24,8 +27,22 @@ namespace ContosoUniversity.Controllers
         //    return View(db.Students.ToList());
         //}
 
+
+        //changing the code after create the repositories
+        private IStudentRepository studentRepository;//create the interface object
+
+        public StudentController()
+        {
+            this.studentRepository = new StudentRepository(new SchoolContext());
+        }
+        public StudentController(IStudentRepository studentRepository)
+        {
+            this.studentRepository = studentRepository;
+        }
+
+
         //Adding sorting functionality to the index method
-        public ViewResult Index(string sortOrder, string currentFilter, string SearchString, int? page)
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name desc" : "";
@@ -33,23 +50,25 @@ namespace ContosoUniversity.Controllers
 
             if (Request.HttpMethod =="GET")
             {
-                SearchString = currentFilter;
+                searchString = currentFilter;
             }
             else
             {
                 page = 1;
             }
-            ViewBag.CurrentFilter = SearchString;
+            ViewBag.CurrentFilter = searchString;
 
-            var students = from s in db.Students
+            //var students = from s in db.Students
+            //               select s;
+            var students = from s in studentRepository.GetStudents()//get all the students
                            select s;
 
             //adding the search box
-            if (!String.IsNullOrEmpty(SearchString))// check that the using searching for a student or not
+            if (!String.IsNullOrEmpty(searchString))// check that the using searching for a student or not
             {
                 //change the search and the name in the database in upper case and mathc up
-                students = students.Where(s => s.LastName.ToUpper().Contains(SearchString.ToUpper())
-                                               || s.FirstMidName.ToUpper().Contains(SearchString.ToUpper()));
+                students = students.Where(s => s.LastName.ToUpper().Contains(searchString.ToUpper())
+                                               || s.FirstMidName.ToUpper().Contains(searchString.ToUpper()));
             }
 
             switch (sortOrder)
@@ -74,6 +93,7 @@ namespace ContosoUniversity.Controllers
             return View(students.ToPagedList(pageNumber, pageSize));
 
         }
+        
 
         //
         // GET: /Student/Details/5
@@ -81,7 +101,8 @@ namespace ContosoUniversity.Controllers
         public ViewResult Details(int id)
         {
             //The id value comes from a query string in the Details hyperlink on the Index page.
-            Student student = db.Students.Find(id);
+            //Student student = db.Students.Find(id);
+            Student student = studentRepository.GetStudentByID(id);
             return View(student);
         }
 
@@ -105,8 +126,10 @@ namespace ContosoUniversity.Controllers
                 if (ModelState.IsValid)
                 {
                     //db is decalre at the top
-                    db.Students.Add(student);
-                    db.SaveChanges();
+                    //db.Students.Add(student);
+                    //db.SaveChanges();
+                    studentRepository.InsertStudent(student);
+                    studentRepository.Save();
                     return RedirectToAction("Index");
                 }
             }
@@ -125,7 +148,8 @@ namespace ContosoUniversity.Controllers
  
         public ActionResult Edit(int id)
         {
-            Student student = db.Students.Find(id);
+            //Student student = db.Students.Find(id);
+            Student student =  studentRepository.GetStudentByID(id);
             return View(student);
         }
 
@@ -142,9 +166,11 @@ namespace ContosoUniversity.Controllers
                 {
                      
                     
-                    db.Entry(student).State = EntityState.Modified;//Modified flag causes the Entity Framework to create
-                                                                   //SQL statements to update the database row.
-                    db.SaveChanges();
+                    //db.Entry(student).State = EntityState.Modified;//Modified flag causes the Entity Framework to create
+                    //                                               //SQL statements to update the database row.
+                    //db.SaveChanges();
+                    studentRepository.UpdateStudent(student);
+                    studentRepository.Save();
                     return RedirectToAction("Index");
                 }
                 
@@ -174,7 +200,9 @@ namespace ContosoUniversity.Controllers
             {
                 ViewBag.ErrorMessage = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
             }
-            return View(db.Students.Find(id));
+            //return View(db.Students.Find(id));
+            Student student = studentRepository.GetStudentByID(id);
+            return View(student);
         }
 
         //
@@ -190,10 +218,15 @@ namespace ContosoUniversity.Controllers
                 //db.Students.Remove(student);
 
                 //avoid an unnecessary SQL query to retrieve the row
-                Student studentToDelete  = new Student(){PersonID = id};
+                //Student studentToDelete  = new Student(){PersonID = id};
+
                 //studentToDelete point to the student in the Student Class base on the StudentID
-                db.Entry(studentToDelete).State = EntityState.Deleted;
-                db.SaveChanges();
+                //db.Entry(studentToDelete).State = EntityState.Deleted;
+                //db.SaveChanges();
+
+                Student student = studentRepository.GetStudentByID(id);
+                studentRepository.DeleteStudent(id);
+                studentRepository.Save();
             }
             catch (DataException)
             {
@@ -214,7 +247,8 @@ namespace ContosoUniversity.Controllers
         protected override void Dispose(bool disposing)//to make sure that the database connections 
                                                         //are not left open
         {
-            db.Dispose();
+            //db.Dispose();
+            studentRepository.Dispose();
             base.Dispose(disposing);
         }
     }
