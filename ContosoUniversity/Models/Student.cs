@@ -47,6 +47,6 @@ namespace ContosoUniversity.Models
          * ICollection is used when the Navigation property is many-to-many OR one-to-many
         */
 
-        // End Navigation properties Section
+        
     }
 }
