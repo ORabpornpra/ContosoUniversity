@@ -39,13 +39,7 @@ namespace ContosoUniversity.Models
         // Start Navigation properties Section
         
         public virtual ICollection<Enrollment> Enrollments { get; set; }
-        /*
-         * Enrollments property is a navigation property. Navigation properties hold other 
-         entities that are related to this entity.
-         * Navigation properties are typically defined 
-         as virtual so that they can take advantage of an Entity Framework function called lazy loading.
-         * ICollection is used when the Navigation property is many-to-many OR one-to-many
-        */
+        
 
         
     }
